@@ -1,0 +1,13 @@
+# Build
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+
+# Other
+xcuserdata/
+*.xcuserstate
+
+# Swift Package Manager
+Packages/
+.build/
