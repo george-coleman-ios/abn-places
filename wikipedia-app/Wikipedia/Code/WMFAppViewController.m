@@ -1254,6 +1254,15 @@ NSString *const WMFLanguageVariantAlertsLibraryVersion = @"WMFLanguageVariantAle
                 // For "View on a map" action to succeed, view mode has to be set to map.
                 [[self placesViewController] updateViewModeToMap];
                 [[self placesViewController] showArticleURL:articleURL];
+            } else {
+                NSNumber *lat = activity.userInfo[@"latitude"];
+                NSNumber *lon = activity.userInfo[@"longitude"];
+                if (lat && lon) {
+                    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(lat.doubleValue, lon.doubleValue);
+                    NSString *name = activity.userInfo[@"name"];
+                    [[self placesViewController] updateViewModeToMap];
+                    [[self placesViewController] showCoordinate:coordinate name:name];
+                }
             }
         } break;
         case WMFUserActivityTypeContent: {

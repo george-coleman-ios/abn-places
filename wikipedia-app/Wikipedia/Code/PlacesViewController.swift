@@ -2088,6 +2088,12 @@ class PlacesViewController: ArticleLocationCollectionViewController, UISearchBar
         currentSearch = PlaceSearch(filter: .top, type: .location, origin: .user, sortStyle: .links, string: nil, region: region, localizedDescription: title, searchResult: searchResult, siteURL: articleURL.wmf_site)
     }
 
+    @objc public func showCoordinate(_ coordinate: CLLocationCoordinate2D, name: String?) {
+        guard view != nil else { return }
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
+        currentSearch = PlaceSearch(filter: .top, type: .location, origin: .user, sortStyle: .links, string: nil, region: region, localizedDescription: name, searchResult: nil)
+    }
+
     fileprivate func searchForFirstSearchSuggestion() {
         if !searchSuggestionController.searches[PlaceSearchSuggestionController.completionSection].isEmpty {
             currentSearch = searchSuggestionController.searches[PlaceSearchSuggestionController.completionSection][0]
