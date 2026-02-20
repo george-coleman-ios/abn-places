@@ -206,6 +206,7 @@ class PlacesViewController: ArticleLocationCollectionViewController, UISearchBar
         super.viewWillAppear(animated)
 
         configureNavigationBar()
+        updateSearchBarText()
 
         constrainButtonsToNavigationBar()
 
@@ -2081,6 +2082,7 @@ class PlacesViewController: ArticleLocationCollectionViewController, UISearchBar
               view != nil else { // force view instantiation
             return
         }
+        panMapToNextLocationUpdate = false
         let region = self.region(thatFits: [article])
         let displayTitleHTML = article.displayTitleHTML
         let displayTitle = article.displayTitle ?? title
@@ -2090,6 +2092,7 @@ class PlacesViewController: ArticleLocationCollectionViewController, UISearchBar
 
     @objc public func showCoordinate(_ coordinate: CLLocationCoordinate2D, name: String?) {
         guard view != nil else { return }
+        panMapToNextLocationUpdate = false
         let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
         currentSearch = PlaceSearch(filter: .top, type: .location, origin: .user, sortStyle: .links, string: nil, region: region, localizedDescription: name, searchResult: nil)
     }
