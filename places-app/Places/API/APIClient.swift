@@ -16,7 +16,9 @@ final class APIClient: APIClientProtocol {
     private let baseURL: URL
     private let decoder: JSONDecoder
 
-    init(httpClient: HTTPClient, baseURL: URL, decoder: JSONDecoder = JSONDecoder()) {
+    init(httpClient: HTTPClient = URLSessionHTTPClient(),
+         baseURL: URL = APIConfiguration.baseURL,
+         decoder: JSONDecoder = JSONDecoder()) {
         self.httpClient = httpClient
         self.baseURL = baseURL
         self.decoder = decoder
