@@ -13,11 +13,20 @@ struct LocationsView: View {
     var body: some View {
         VStack {
             ForEach(viewModel.locations) { location in
-                Text(location.name ?? "name missing: (\(location.latitude), \(location.longitude))")
+                Button {
+                    Task {
+                        await viewModel.locationPressed(location)
+                    }
+                } label: {
+                    Text(location.name ?? "(\(location.latitude), \(location.longitude))")
+                }
             }
         }
         .task {
             try? await viewModel.fetchLocations()
+        }
+        .alert("Wikipedia app not installed", isPresented: $viewModel.isShowingWikipediaAlert) {
+            Button("OK", role: .cancel) {}
         }
     }
 }
