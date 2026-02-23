@@ -13,21 +13,25 @@ final class LocationsViewModelTests: XCTestCase {
 
     private var mockGetLocationsUseCase: MockGetLocationsUseCase!
     private var mockOpenLocationInWikipediaUseCase: MockOpenLocationInWikipediaUseCase!
+    private var mockCreateCustomLocationUseCase: MockCreateCustomLocationUseCase!
     private var sut: LocationsViewModel!
 
     override func setUp() {
         super.setUp()
         mockGetLocationsUseCase = MockGetLocationsUseCase()
         mockOpenLocationInWikipediaUseCase = MockOpenLocationInWikipediaUseCase()
+        mockCreateCustomLocationUseCase = MockCreateCustomLocationUseCase()
         sut = LocationsViewModel(
             getLocationsUseCase: mockGetLocationsUseCase,
-            openLocationInWikipediaUseCase: mockOpenLocationInWikipediaUseCase
+            openLocationInWikipediaUseCase: mockOpenLocationInWikipediaUseCase,
+            createCustomLocationUseCase: mockCreateCustomLocationUseCase
         )
     }
 
     override func tearDown() {
         mockGetLocationsUseCase = nil
         mockOpenLocationInWikipediaUseCase = nil
+        mockCreateCustomLocationUseCase = nil
         sut = nil
         super.tearDown()
     }
@@ -80,6 +84,80 @@ final class LocationsViewModelTests: XCTestCase {
         await sut.locationPressed(location)
 
         // Then
-        XCTAssertTrue(sut.isShowingWikipediaAlert, "Expected isShowingWikipediaAlert to be true, got false instead")
+        XCTAssertEqual(sut.alert, .wikipediaNotInstalled, "Expected alert .wikipediaNotInstalled, got \(String(describing: sut.alert)) instead")
+    }
+
+    func test_addCustomLocation_validInputs_appendsLocationToList() {
+        // Given
+        let expected = Location(name: "Test", latitude: 52.0, longitude: 4.0)
+        mockCreateCustomLocationUseCase.result = .success(expected)
+        sut.customLocationName = "Test"
+        sut.customLocationLatitude = "52.0"
+        sut.customLocationLongitude = "4.0"
+
+        // When
+        sut.addCustomLocation()
+
+        // Then
+        XCTAssertEqual(sut.locations.count, 1, "Expected 1 location, got \(sut.locations.count) instead")
+        XCTAssertEqual(sut.locations.first?.name, expected.name, "Expected \(String(describing: expected.name)), got \(String(describing: sut.locations.first?.name)) instead")
+    }
+
+    func test_addCustomLocation_validInputs_clearsInputFields() {
+        // Given
+        let location = Location(name: "Test", latitude: 52.0, longitude: 4.0)
+        mockCreateCustomLocationUseCase.result = .success(location)
+        sut.customLocationName = "Test"
+        sut.customLocationLatitude = "52.0"
+        sut.customLocationLongitude = "4.0"
+
+        // When
+        sut.addCustomLocation()
+
+        // Then
+        XCTAssertTrue(sut.customLocationName.isEmpty, "Expected customLocationName to be empty, got '\(sut.customLocationName)' instead")
+        XCTAssertTrue(sut.customLocationLatitude.isEmpty, "Expected customLocationLatitude to be empty, got '\(sut.customLocationLatitude)' instead")
+        XCTAssertTrue(sut.customLocationLongitude.isEmpty, "Expected customLocationLongitude to be empty, got '\(sut.customLocationLongitude)' instead")
+    }
+
+    func test_addCustomLocation_commaAsDecimalSeparator_appendsLocationToList() {
+        // Given
+        let expected = Location(name: nil, latitude: 52.3547498, longitude: 4.8339215)
+        mockCreateCustomLocationUseCase.result = .success(expected)
+        sut.customLocationLatitude = "52,3547498"
+        sut.customLocationLongitude = "4,8339215"
+
+        // When
+        sut.addCustomLocation()
+
+        // Then
+        XCTAssertEqual(sut.locations.count, 1, "Expected 1 location, got \(sut.locations.count) instead")
+        XCTAssertEqual(mockCreateCustomLocationUseCase.executedLatitudes.first, 52.3547498, "Expected latitude 52.3547498, got \(String(describing: mockCreateCustomLocationUseCase.executedLatitudes.first)) instead")
+        XCTAssertEqual(mockCreateCustomLocationUseCase.executedLongitudes.first, 4.8339215, "Expected longitude 4.8339215, got \(String(describing: mockCreateCustomLocationUseCase.executedLongitudes.first)) instead")
+    }
+
+    func test_addCustomLocation_nonNumericLatitude_setsIsShowingInvalidCoordinateAlert() {
+        // Given
+        sut.customLocationLatitude = "not-a-number"
+        sut.customLocationLongitude = "4.0"
+
+        // When
+        sut.addCustomLocation()
+
+        // Then
+        XCTAssertEqual(sut.alert, .invalidCoordinates, "Expected alert .invalidCoordinates, got \(String(describing: sut.alert)) instead")
+    }
+
+    func test_addCustomLocation_useCaseThrows_setsIsShowingInvalidCoordinateAlert() {
+        // Given
+        mockCreateCustomLocationUseCase.result = .failure(CreateCustomLocationError.invalidLatitude)
+        sut.customLocationLatitude = "91.0"
+        sut.customLocationLongitude = "4.0"
+
+        // When
+        sut.addCustomLocation()
+
+        // Then
+        XCTAssertEqual(sut.alert, .invalidCoordinates, "Expected alert .invalidCoordinates, got \(String(describing: sut.alert)) instead")
     }
 }

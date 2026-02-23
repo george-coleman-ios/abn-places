@@ -12,7 +12,8 @@ struct PlacesApp: App {
 
     private let viewModel = LocationsViewModel(
         getLocationsUseCase: GetLocationsUseCase(repository: LocationsRepository()),
-        openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCase(urlOpener: URLOpener())
+        openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCase(urlOpener: URLOpener()),
+        createCustomLocationUseCase: CreateCustomLocationUseCase()
     )
 
     var body: some Scene {
