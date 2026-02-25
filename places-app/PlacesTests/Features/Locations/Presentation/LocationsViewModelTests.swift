@@ -36,7 +36,7 @@ final class LocationsViewModelTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_fetchLocations_successfulResponse_populatesLocations() async throws {
+    func test_fetchLocations_successfulResponse_populatesLocations() async {
         // Given
         let expected = [
             Location(name: "Amsterdam", latitude: 52.3547498, longitude: 4.8339215),
@@ -45,22 +45,48 @@ final class LocationsViewModelTests: XCTestCase {
         mockGetLocationsUseCase.result = .success(expected)
 
         // When
-        try await sut.fetchLocations()
+        await sut.fetchLocations()
 
         // Then
+        XCTAssertEqual(sut.contentState, .loaded, "Expected contentState .loaded, got \(sut.contentState) instead")
         XCTAssertEqual(sut.locations.count, expected.count, "Expected \(expected.count) locations, got \(sut.locations.count) instead")
         XCTAssertEqual(sut.locations[0].name, expected[0].name, "Expected \(String(describing: expected[0].name)), got \(String(describing: sut.locations[0].name)) instead")
     }
 
-    func test_fetchLocations_useCaseThrows_locationsRemainsEmpty() async {
+    func test_fetchLocations_useCaseThrows_setsErrorState() async {
         // Given
         mockGetLocationsUseCase.result = .failure(URLError(.notConnectedToInternet))
 
         // When
-        try? await sut.fetchLocations()
+        await sut.fetchLocations()
 
         // Then
+        XCTAssertEqual(sut.contentState, .error, "Expected contentState .error, got \(sut.contentState) instead")
         XCTAssertTrue(sut.locations.isEmpty, "Expected locations to be empty, got \(sut.locations) instead")
+    }
+
+    func test_init_contentStateIsLoading() {
+        // Given/When — sut is created in setUp
+
+        // Then
+        XCTAssertEqual(sut.contentState, .loading, "Expected contentState .loading, got \(sut.contentState) instead")
+    }
+
+    func test_fetchLocations_afterError_retrySucceeds() async {
+        // Given
+        mockGetLocationsUseCase.result = .failure(URLError(.notConnectedToInternet))
+        await sut.fetchLocations()
+        XCTAssertEqual(sut.contentState, .error, "Expected contentState .error after first fetch, got \(sut.contentState) instead")
+
+        let expected = [Location(name: "Amsterdam", latitude: 52.3547498, longitude: 4.8339215)]
+        mockGetLocationsUseCase.result = .success(expected)
+
+        // When
+        await sut.fetchLocations()
+
+        // Then
+        XCTAssertEqual(sut.contentState, .loaded, "Expected contentState .loaded after retry, got \(sut.contentState) instead")
+        XCTAssertEqual(sut.locations.count, expected.count, "Expected \(expected.count) locations, got \(sut.locations.count) instead")
     }
 
     func test_locationPressed_callsUseCaseWithLocation() async {

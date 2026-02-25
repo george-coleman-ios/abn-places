@@ -16,8 +16,16 @@ struct LocationsView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: style.listSpacing) {
-                    ForEach(viewModel.locations) { location in
-                        row(for: location)
+                    switch viewModel.contentState {
+                        case .loading:
+                            ProgressView()
+                                .padding(.vertical, style.listPadding)
+                        case .error:
+                            errorCard
+                        case .loaded:
+                            ForEach(viewModel.locations) { location in
+                                row(for: location)
+                            }
                     }
                     if !viewModel.customLocations.isEmpty {
                         SectionHeader(title: "My locations")
@@ -50,6 +58,11 @@ struct LocationsView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
         }
+        .onChange(of: viewModel.contentState) { _, newValue in
+            if newValue == .error {
+                AccessibilityNotification.Announcement("Failed to load locations").post()
+            }
+        }
         .onChange(of: viewModel.locations) { oldValue, newValue in
             if oldValue.isEmpty && !newValue.isEmpty {
                 AccessibilityNotification.Announcement("Locations loaded").post()
@@ -63,7 +76,7 @@ struct LocationsView: View {
             }
         }
         .task {
-            try? await viewModel.fetchLocations()
+            await viewModel.fetchLocations()
         }
         .alert(item: $viewModel.alert) { alert in
             return switch alert {
@@ -82,6 +95,36 @@ struct LocationsView: View {
             Task { await viewModel.locationPressed(location) }
         }
         .transition(.opacity)
+    }
+
+    private var errorCard: some View {
+        VStack(spacing: style.formFieldSpacing) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.title)
+                .foregroundStyle(style.secondaryTextColor)
+                .accessibilityHidden(true)
+            Text("Unable to load locations")
+                .font(style.rowTitleFont)
+                .fontWeight(style.rowTitleWeight)
+                .foregroundStyle(style.titleColor)
+            Text("Check your connection and try again.")
+                .font(style.rowSubtitleFont)
+                .foregroundStyle(style.secondaryTextColor)
+            Button {
+                Task { await viewModel.fetchLocations() }
+            } label: {
+                Text("Retry")
+                    .fontWeight(style.addButtonWeight)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, style.addButtonVerticalPadding)
+                    .background(style.accentColor)
+                    .foregroundStyle(style.onAccentColor)
+                    .clipShape(RoundedRectangle(cornerRadius: style.buttonCornerRadius))
+            }
+        }
+        .padding(.all, style.cardPadding)
+        .background(style.surfaceColor)
+        .clipShape(RoundedRectangle(cornerRadius: style.cardCornerRadius))
     }
 }
 

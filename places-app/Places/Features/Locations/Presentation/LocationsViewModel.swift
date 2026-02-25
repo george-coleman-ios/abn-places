@@ -8,6 +8,12 @@
 import Observation
 import Foundation
 
+enum ContentState {
+    case loading
+    case loaded
+    case error
+}
+
 enum LocationsAlert: Identifiable, Equatable {
     case wikipediaNotInstalled
     case invalidCoordinates
@@ -21,6 +27,7 @@ final class LocationsViewModel {
 
     var locations: [Location] = []
     var customLocations: [Location] = []
+    var contentState: ContentState = .loading
     var alert: LocationsAlert?
     var customLocationName: String = ""
     var customLocationLatitude: String = ""
@@ -38,8 +45,14 @@ final class LocationsViewModel {
         self.createCustomLocationUseCase = createCustomLocationUseCase
     }
 
-    func fetchLocations() async throws {
-        locations = try await getLocationsUseCase.execute()
+    func fetchLocations() async {
+        contentState = .loading
+        do {
+            locations = try await getLocationsUseCase.execute()
+            contentState = .loaded
+        } catch {
+            contentState = .error
+        }
     }
 
     func locationPressed(_ location: Location) async {
