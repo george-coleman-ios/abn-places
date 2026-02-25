@@ -131,7 +131,7 @@ final class LocationsViewModelTests: XCTestCase {
         sut.addCustomLocation()
 
         // Then
-        XCTAssertEqual(sut.locations.count, 1, "Expected 1 location, got \(sut.locations.count) instead")
+        XCTAssertEqual(sut.customLocations.count, 1, "Expected 1 custom location, got \(sut.customLocations.count) instead")
         XCTAssertEqual(mockCreateCustomLocationUseCase.executedLatitudes.first, 52.3547498, "Expected latitude 52.3547498, got \(String(describing: mockCreateCustomLocationUseCase.executedLatitudes.first)) instead")
         XCTAssertEqual(mockCreateCustomLocationUseCase.executedLongitudes.first, 4.8339215, "Expected longitude 4.8339215, got \(String(describing: mockCreateCustomLocationUseCase.executedLongitudes.first)) instead")
     }

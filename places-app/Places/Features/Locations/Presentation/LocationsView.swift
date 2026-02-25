@@ -41,6 +41,7 @@ struct LocationsView: View {
                         Button("Reset") {
                             viewModel.resetCustomLocations()
                         }
+                        .accessibilityHint("Removes all custom locations")
                         .tint(style.onAccentColor)
                     }
                 }
@@ -48,6 +49,18 @@ struct LocationsView: View {
             .toolbarBackground(style.primaryColor, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
+        }
+        .onChange(of: viewModel.locations) { oldValue, newValue in
+            if oldValue.isEmpty && !newValue.isEmpty {
+                AccessibilityNotification.Announcement("Locations loaded").post()
+            }
+        }
+        .onChange(of: viewModel.customLocations) { oldValue, newValue in
+            if newValue.count > oldValue.count {
+                AccessibilityNotification.Announcement("Location added").post()
+            } else if newValue.isEmpty && !oldValue.isEmpty {
+                AccessibilityNotification.Announcement("Custom locations removed").post()
+            }
         }
         .task {
             try? await viewModel.fetchLocations()
@@ -80,12 +93,21 @@ private struct LocationRow: View {
 
     private let style = Style()
 
+    private var locationAccessibilityLabel: String {
+        let coordinates = "Latitude \(location.latitude), Longitude \(location.longitude)"
+        if let name = location.name {
+            return "\(name), \(coordinates)"
+        }
+        return coordinates
+    }
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: style.rowIconSpacing) {
                 Image(systemName: style.locationIcon)
                     .font(style.locationIconFont)
                     .foregroundStyle(style.primaryColor)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: style.rowTitleSubtitleSpacing) {
                     Text(location.name ?? String(format: "%.4f, %.4f", location.latitude, location.longitude))
                         .font(style.rowTitleFont)
@@ -102,12 +124,15 @@ private struct LocationRow: View {
                     .font(style.chevronFont)
                     .fontWeight(style.chevronWeight)
                     .foregroundStyle(style.secondaryTextColor)
+                    .accessibilityHidden(true)
             }
             .padding()
             .background(style.surfaceColor)
             .clipShape(RoundedRectangle(cornerRadius: style.cardCornerRadius))
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(locationAccessibilityLabel)
+        .accessibilityHint("Opens in Wikipedia")
     }
 }
 
@@ -122,6 +147,7 @@ private struct SectionHeader: View {
                 .font(style.sectionHeaderFont)
                 .fontWeight(style.sectionHeaderWeight)
                 .foregroundStyle(style.secondaryTextColor)
+                .accessibilityAddTraits(.isHeader)
             Spacer()
         }
         .padding(.horizontal, style.sectionHeaderHorizontalPadding)
@@ -142,12 +168,15 @@ private struct AddLocationForm: View {
             Text("Add a location")
                 .font(style.formTitleFont)
                 .foregroundStyle(style.titleColor)
+                .accessibilityAddTraits(.isHeader)
             Group {
                 TextField("Name (optional)", text: $name)
                 TextField("Latitude", text: $latitude)
                     .keyboardType(.decimalPad)
+                    .accessibilityHint("Range: -90 to 90")
                 TextField("Longitude", text: $longitude)
                     .keyboardType(.decimalPad)
+                    .accessibilityHint("Range: -180 to 180")
             }
             .textFieldStyle(.roundedBorder)
             Button(action: onAdd) {
@@ -159,6 +188,7 @@ private struct AddLocationForm: View {
                     .foregroundStyle(style.onAccentColor)
                     .clipShape(RoundedRectangle(cornerRadius: style.buttonCornerRadius))
             }
+            .accessibilityHint("Adds a custom location to the list")
         }
         .padding()
         .background(style.surfaceColor)
