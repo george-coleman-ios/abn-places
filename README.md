@@ -11,7 +11,7 @@ The data layer only communicates to the Domain layer, which only communicates to
 
 Things I would do if I had more time:
 - In the Wikipedia app: PlacesViewController is a behemoth of a class. I wanted to write a test for showCoordinate (the method I added) but there is currently no test infrastructure in place and all business logic is written in the VC. To write tests for this class a significant refactor of the class is needed. This felt out of scope for this assignment. 
-- In the places app: I currently have no perstistence of any kind. This is not necessarily skipped due to time constraints, but because I feel like it's important to stick to the brief of the assignment and not expand beyond it. If this was a project within ABN, with a product owner and a UX designer, this would be something that I would discuss with them before making a decision. 
+- In the places app: I currently have no persistence of any kind. This is not necessarily skipped due to time constraints, but because I feel like it's important to stick to the brief of the assignment and not expand beyond it. If this was a project within ABN, with a product owner and a UX designer, this would be something that I would discuss with them before making a decision. 
 - In any application with UI I generally really like adding screenshot tests, however since this project has no dependencies I didn't feel like introducing the snapshot-testing library was appropriate.
 
 Things to consider: 
