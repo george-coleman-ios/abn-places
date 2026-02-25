@@ -1,4 +1,4 @@
-# abn-places
+# ABN places tech assignment
 
 Architecture choice: 
 For this project I decided to use clean architecture. In my opinion, predictability, testability and maintainability are the most important features of a good code base and clean architecture forces us as developers to adhere to these principles more or less automatically. I have organised the project by feature. These features should all hold the same three internal layers, namely 
