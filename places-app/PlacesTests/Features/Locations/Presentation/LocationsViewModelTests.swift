@@ -99,8 +99,8 @@ final class LocationsViewModelTests: XCTestCase {
         sut.addCustomLocation()
 
         // Then
-        XCTAssertEqual(sut.locations.count, 1, "Expected 1 location, got \(sut.locations.count) instead")
-        XCTAssertEqual(sut.locations.first?.name, expected.name, "Expected \(String(describing: expected.name)), got \(String(describing: sut.locations.first?.name)) instead")
+        XCTAssertEqual(sut.customLocations.count, 1, "Expected 1 custom location, got \(sut.customLocations.count) instead")
+        XCTAssertEqual(sut.customLocations.first?.name, expected.name, "Expected \(String(describing: expected.name)), got \(String(describing: sut.customLocations.first?.name)) instead")
     }
 
     func test_addCustomLocation_validInputs_clearsInputFields() {
@@ -146,6 +146,21 @@ final class LocationsViewModelTests: XCTestCase {
 
         // Then
         XCTAssertEqual(sut.alert, .invalidCoordinates, "Expected alert .invalidCoordinates, got \(String(describing: sut.alert)) instead")
+    }
+
+    func test_resetCustomLocations_clearsCustomLocations() {
+        // Given
+        let location = Location(name: "Test", latitude: 52.0, longitude: 4.0)
+        mockCreateCustomLocationUseCase.result = .success(location)
+        sut.customLocationLatitude = "52.0"
+        sut.customLocationLongitude = "4.0"
+        sut.addCustomLocation()
+
+        // When
+        sut.resetCustomLocations()
+
+        // Then
+        XCTAssertTrue(sut.customLocations.isEmpty, "Expected customLocations to be empty, got \(sut.customLocations) instead")
     }
 
     func test_addCustomLocation_useCaseThrows_setsIsShowingInvalidCoordinateAlert() {

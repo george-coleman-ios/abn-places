@@ -19,6 +19,7 @@ enum LocationsAlert: Identifiable, Equatable {
 final class LocationsViewModel: ObservableObject {
 
     @Published var locations: [Location] = []
+    @Published var customLocations: [Location] = []
     @Published var alert: LocationsAlert?
     @Published var customLocationName: String = ""
     @Published var customLocationLatitude: String = ""
@@ -50,6 +51,10 @@ final class LocationsViewModel: ObservableObject {
         }
     }
 
+    func resetCustomLocations() {
+        customLocations = []
+    }
+
     func addCustomLocation() {
         let latitudeString = customLocationLatitude.replacingOccurrences(of: ",", with: ".")
         let longitudeString = customLocationLongitude.replacingOccurrences(of: ",", with: ".")
@@ -61,7 +66,7 @@ final class LocationsViewModel: ObservableObject {
 
         do {
             let location = try createCustomLocationUseCase.execute(name: customLocationName, latitude: latitude, longitude: longitude)
-            locations.append(location)
+            customLocations.append(location)
             customLocationName = ""
             customLocationLatitude = ""
             customLocationLongitude = ""
