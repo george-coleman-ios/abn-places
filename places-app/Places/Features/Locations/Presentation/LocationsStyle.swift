@@ -17,6 +17,9 @@ struct Style {
     let sectionHeaderHorizontalPadding: CGFloat = 4
     let sectionHeaderTopPadding: CGFloat = 4
     let addButtonVerticalPadding: CGFloat = 12
+    let listPadding: CGFloat = 16
+    let cardPadding: CGFloat = 16
+    let formPadding: CGFloat = 16
     let cardCornerRadius: CGFloat = 12
     let buttonCornerRadius: CGFloat = 10
 

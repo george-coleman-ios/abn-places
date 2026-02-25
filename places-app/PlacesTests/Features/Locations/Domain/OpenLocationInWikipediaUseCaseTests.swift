@@ -28,7 +28,7 @@ final class OpenLocationInWikipediaUseCaseTests: XCTestCase {
     func test_execute_locationWithName_opensWikipediaURLWithCoordinatesAndName() async throws {
         // Given
         let location = Location(name: "Amsterdam", latitude: 52.3676, longitude: 4.9041)
-        let expected = URL(string: "wikipedia://places?latitude=52.3676&longitude=4.9041&name=Amsterdam")!
+        let expected = try XCTUnwrap(URL(string: "wikipedia://places?latitude=52.3676&longitude=4.9041&name=Amsterdam"))
 
         // When
         try await sut.execute(location: location)
@@ -41,7 +41,7 @@ final class OpenLocationInWikipediaUseCaseTests: XCTestCase {
     func test_execute_locationWithoutName_opensWikipediaURLWithCoordinatesOnly() async throws {
         // Given
         let location = Location(name: nil, latitude: 40.4380638, longitude: -3.7495758)
-        let expected = URL(string: "wikipedia://places?latitude=40.4380638&longitude=-3.7495758")!
+        let expected = try XCTUnwrap(URL(string: "wikipedia://places?latitude=40.4380638&longitude=-3.7495758"))
 
         // When
         try await sut.execute(location: location)

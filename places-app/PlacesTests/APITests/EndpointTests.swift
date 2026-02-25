@@ -13,8 +13,10 @@ final class EndpointTests: XCTestCase {
     func test_makeURLRequest_buildsCorrectURL() {
         // Given
         let sut = Endpoint(path: "api/places")
+        // swiftlint:disable force_unwrapping
         let baseURL = URL(string: "https://www.apple.com")!
         let expectedURL = URL(string: "https://www.apple.com/api/places")!
+        // swiftlint:enable force_unwrapping
 
         // When
         let request = sut.makeURLRequest(baseURL: baseURL)

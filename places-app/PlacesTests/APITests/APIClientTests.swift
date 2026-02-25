@@ -13,6 +13,7 @@ final class APIClientTests: XCTestCase {
     private var mockHTTPClient: MockHTTPClient!
     private var sut: APIClient!
 
+    // swiftlint:disable:next force_unwrapping
     private let baseURL = URL(string: "https://www.apple.com")!
 
     override func setUp() {
@@ -97,6 +98,7 @@ final class APIClientTests: XCTestCase {
 // MARK: - Helpers
 extension APIClientTests {
     private func makeHTTPResponse(statusCode: Int) -> HTTPURLResponse {
+        // swiftlint:disable:next force_unwrapping
         HTTPURLResponse(url: baseURL, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
 }

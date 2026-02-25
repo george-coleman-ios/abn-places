@@ -14,6 +14,9 @@ final class MockAPIClient: APIClientProtocol, @unchecked Sendable {
 
     func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T {
         capturedEndpoint = endpoint
-        return try result.get() as! T
+        guard let value = try result.get() as? T else {
+            fatalError("MockAPIClient: could not cast result to \(T.self)")
+        }
+        return value
     }
 }

@@ -16,19 +16,19 @@ struct LocationsView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: style.listSpacing) {
-                    ForEach(viewModel.locations) {
-                        location in row(for: location)
+                    ForEach(viewModel.locations) { location in
+                        row(for: location)
                     }
                     if !viewModel.customLocations.isEmpty {
                         SectionHeader(title: "My locations")
                             .transition(.opacity)
-                        ForEach(viewModel.customLocations) {
-                            location in row(for: location)
+                        ForEach(viewModel.customLocations) { location in
+                            row(for: location)
                         }
                     }
                     AddLocationForm(name: $viewModel.customLocationName, latitude: $viewModel.customLocationLatitude, longitude: $viewModel.customLocationLongitude, onAdd: viewModel.addCustomLocation)
                 }
-                .padding()
+                .padding(.all, style.listPadding)
                 .animation(.easeInOut(duration: 0.3), value: viewModel.locations)
                 .animation(.easeInOut(duration: 0.3), value: viewModel.customLocations)
             }
@@ -67,13 +67,11 @@ struct LocationsView: View {
         }
         .alert(item: $viewModel.alert) { alert in
             return switch alert {
-            case .wikipediaNotInstalled:
-                Alert(title: Text("Wikipedia app not installed"))
-            case .invalidCoordinates:
-                Alert(
-                    title: Text("Invalid coordinates"),
-                    message: Text("Enter a valid latitude (-90 to 90) and longitude (-180 to 180).")
-                )
+                case .wikipediaNotInstalled:
+                    Alert(title: Text("Wikipedia app not installed"))
+                case .invalidCoordinates:
+                    Alert(title: Text("Invalid coordinates"),
+                          message: Text("Enter a valid latitude (-90 to 90) and longitude (-180 to 180)."))
             }
         }
     }
@@ -126,7 +124,7 @@ private struct LocationRow: View {
                     .foregroundStyle(style.secondaryTextColor)
                     .accessibilityHidden(true)
             }
-            .padding()
+            .padding(.all, style.cardPadding)
             .background(style.surfaceColor)
             .clipShape(RoundedRectangle(cornerRadius: style.cardCornerRadius))
         }
@@ -190,7 +188,7 @@ private struct AddLocationForm: View {
             }
             .accessibilityHint("Adds a custom location to the list")
         }
-        .padding()
+        .padding(.all, style.formPadding)
         .background(style.surfaceColor)
         .clipShape(RoundedRectangle(cornerRadius: style.cardCornerRadius))
     }

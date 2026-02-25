@@ -29,11 +29,9 @@ final class LocationsViewModel: ObservableObject {
     private let openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol
     private let createCustomLocationUseCase: CreateCustomLocationUseCaseProtocol
 
-    init(
-        getLocationsUseCase: GetLocationsUseCaseProtocol,
-        openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol,
-        createCustomLocationUseCase: CreateCustomLocationUseCaseProtocol
-    ) {
+    init(getLocationsUseCase: GetLocationsUseCaseProtocol,
+         openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol,
+         createCustomLocationUseCase: CreateCustomLocationUseCaseProtocol) {
         self.getLocationsUseCase = getLocationsUseCase
         self.openLocationInWikipediaUseCase = openLocationInWikipediaUseCase
         self.createCustomLocationUseCase = createCustomLocationUseCase
