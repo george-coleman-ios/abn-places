@@ -8,7 +8,7 @@
 import Foundation
 @testable import Places
 
-final class MockOpenLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol {
+final class MockOpenLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol, @unchecked Sendable {
     var executedLocations: [Location] = []
     var error: Error?
 

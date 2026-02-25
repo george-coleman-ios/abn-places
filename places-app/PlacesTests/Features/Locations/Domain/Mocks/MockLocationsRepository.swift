@@ -8,7 +8,7 @@
 import XCTest
 @testable import Places
 
-final class MockLocationsRepository: LocationsRepositoryProtocol {
+final class MockLocationsRepository: LocationsRepositoryProtocol, @unchecked Sendable {
     var result: Result<[Location], Error>!
 
     func fetchLocations() async throws -> [Location] {

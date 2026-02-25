@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol URLOpenerProtocol {
+protocol URLOpenerProtocol: Sendable {
     func open(_ url: URL) async -> Bool
 }

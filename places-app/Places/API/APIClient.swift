@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol APIClientProtocol {
+protocol APIClientProtocol: Sendable {
     func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
 }
 

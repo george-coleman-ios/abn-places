@@ -8,7 +8,7 @@
 import XCTest
 @testable import Places
 
-final class MockAPIClient: APIClientProtocol {
+final class MockAPIClient: APIClientProtocol, @unchecked Sendable {
     var result: Result<Any, Error>!
     var capturedEndpoint: Endpoint?
 

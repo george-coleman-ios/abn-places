@@ -5,7 +5,7 @@
 //  Created by George Coleman on 21/02/2026.
 //
 
-protocol GetLocationsUseCaseProtocol {
+protocol GetLocationsUseCaseProtocol: Sendable {
     func execute() async throws -> [Location]
 }
 

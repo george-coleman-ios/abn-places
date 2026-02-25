@@ -8,7 +8,7 @@
 import XCTest
 @testable import Places
 
-final class MockGetLocationsUseCase: GetLocationsUseCaseProtocol {
+final class MockGetLocationsUseCase: GetLocationsUseCaseProtocol, @unchecked Sendable {
     var result: Result<[Location], Error>!
 
     func execute() async throws -> [Location] {

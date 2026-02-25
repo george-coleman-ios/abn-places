@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol HTTPClient {
+protocol HTTPClient: Sendable {
     func execute(_ request: URLRequest) async throws -> (Data, HTTPURLResponse)
 }
 

@@ -8,7 +8,7 @@
 import XCTest
 @testable import Places
 
-final class MockCreateCustomLocationUseCase: CreateCustomLocationUseCaseProtocol {
+final class MockCreateCustomLocationUseCase: CreateCustomLocationUseCaseProtocol, @unchecked Sendable {
     var result: Result<Location, Error>!
     var executedNames: [String?] = []
     var executedLatitudes: [Double] = []

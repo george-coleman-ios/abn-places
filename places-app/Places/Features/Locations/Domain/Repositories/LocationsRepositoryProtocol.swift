@@ -5,6 +5,6 @@
 //  Created by George Coleman on 21/02/2026.
 //
 
-protocol LocationsRepositoryProtocol {
+protocol LocationsRepositoryProtocol: Sendable {
     func fetchLocations() async throws -> [Location]
 }

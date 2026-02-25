@@ -12,7 +12,7 @@ enum CreateCustomLocationError: Error, Equatable {
     case invalidLongitude
 }
 
-protocol CreateCustomLocationUseCaseProtocol {
+protocol CreateCustomLocationUseCaseProtocol: Sendable {
     func execute(name: String?, latitude: Double, longitude: Double) throws -> Location
 }
 

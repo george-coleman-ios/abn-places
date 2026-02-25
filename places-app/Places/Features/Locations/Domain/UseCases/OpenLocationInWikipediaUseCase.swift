@@ -11,7 +11,7 @@ enum OpenLocationInWikipediaError: Error {
     case appNotInstalled
 }
 
-protocol OpenLocationInWikipediaUseCaseProtocol {
+protocol OpenLocationInWikipediaUseCaseProtocol: Sendable {
     func execute(location: Location) async throws
 }
 

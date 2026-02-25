@@ -8,7 +8,7 @@
 import Foundation
 @testable import Places
 
-final class MockURLOpener: URLOpenerProtocol {
+final class MockURLOpener: URLOpenerProtocol, @unchecked Sendable {
     var openedURLs: [URL] = []
     var shouldSucceed = true
 
