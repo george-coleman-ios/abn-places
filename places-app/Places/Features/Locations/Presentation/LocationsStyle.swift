@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Style {
+struct LocationsStyle {
     // MARK: Floats
 
     let listSpacing: CGFloat = 12
