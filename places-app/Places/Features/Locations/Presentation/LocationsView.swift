@@ -18,7 +18,7 @@ struct LocationsView: View {
                 LazyVStack(spacing: style.listSpacing) {
                     switch viewModel.contentState {
                         case .loading:
-                            ProgressView()
+                            ProgressView("Loading locations")
                                 .padding(.vertical, style.listPadding)
                         case .error:
                             errorCard
