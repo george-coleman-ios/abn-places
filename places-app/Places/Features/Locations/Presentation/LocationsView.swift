@@ -207,6 +207,8 @@ private struct AddLocationForm: View {
     @Binding var longitude: String
     let onAdd: () -> Void
 
+    @FocusState private var focusedField: CoordinateField?
+
     private let style = LocationsStyle()
 
     var body: some View {
@@ -220,9 +222,11 @@ private struct AddLocationForm: View {
                 TextField("Latitude", text: $latitude)
                     .keyboardType(.decimalPad)
                     .accessibilityHint("Range: -90 to 90")
+                    .focused($focusedField, equals: .latitude)
                 TextField("Longitude", text: $longitude)
                     .keyboardType(.decimalPad)
                     .accessibilityHint("Range: -180 to 180")
+                    .focused($focusedField, equals: .longitude)
             }
             .textFieldStyle(.roundedBorder)
             Button(action: onAdd) {
@@ -239,5 +243,46 @@ private struct AddLocationForm: View {
         .padding(.all, style.formPadding)
         .background(style.surfaceColor)
         .clipShape(RoundedRectangle(cornerRadius: style.cardCornerRadius))
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                if focusedField != nil {
+                    HStack {
+                        Button {
+                            toggleSign()
+                        } label: {
+                            Text("+/−")
+                        }
+                        .accessibilityLabel("Toggle sign")
+                        .accessibilityHint("Switches between positive and negative")
+                        Spacer()
+                        Button("Done") {
+                            focusedField = nil
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func toggleSign() {
+        switch focusedField {
+            case .latitude:
+                latitude = toggleLeadingMinus(latitude)
+            case .longitude:
+                longitude = toggleLeadingMinus(longitude)
+            case nil:
+                break
+        }
+    }
+
+    private func toggleLeadingMinus(_ value: String) -> String {
+        if value.hasPrefix("-") {
+            return String(value.dropFirst())
+        }
+        return "-" + value
+    }
+
+    private enum CoordinateField {
+        case latitude, longitude
     }
 }
