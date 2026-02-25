@@ -5,7 +5,7 @@
 //  Created by George Coleman on 21/02/2026.
 //
 
-import Combine
+import Observation
 import Foundation
 
 enum LocationsAlert: Identifiable, Equatable {
@@ -16,14 +16,15 @@ enum LocationsAlert: Identifiable, Equatable {
 }
 
 @MainActor
-final class LocationsViewModel: ObservableObject {
+@Observable
+final class LocationsViewModel {
 
-    @Published var locations: [Location] = []
-    @Published var customLocations: [Location] = []
-    @Published var alert: LocationsAlert?
-    @Published var customLocationName: String = ""
-    @Published var customLocationLatitude: String = ""
-    @Published var customLocationLongitude: String = ""
+    var locations: [Location] = []
+    var customLocations: [Location] = []
+    var alert: LocationsAlert?
+    var customLocationName: String = ""
+    var customLocationLatitude: String = ""
+    var customLocationLongitude: String = ""
 
     private let getLocationsUseCase: GetLocationsUseCaseProtocol
     private let openLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtocol

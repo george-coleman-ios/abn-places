@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LocationsView: View {
-    @ObservedObject var viewModel: LocationsViewModel
+    @Bindable var viewModel: LocationsViewModel
 
     private let style = Style()
 
