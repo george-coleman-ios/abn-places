@@ -19,6 +19,20 @@ enum LocationsAlert: Identifiable, Equatable {
     case invalidCoordinates
 
     var id: Self { self }
+
+    var title: String {
+        switch self {
+            case .wikipediaNotInstalled: "Wikipedia app not installed"
+            case .invalidCoordinates: "Invalid coordinates"
+        }
+    }
+
+    var message: String? {
+        switch self {
+            case .wikipediaNotInstalled: nil
+            case .invalidCoordinates: "Enter a valid latitude (-90 to 90) and longitude (-180 to 180)."
+        }
+    }
 }
 
 @MainActor

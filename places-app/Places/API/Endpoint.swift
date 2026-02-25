@@ -15,7 +15,7 @@ struct Endpoint {
     let path: String
 
     func makeURLRequest(baseURL: URL) -> URLRequest {
-        var request = URLRequest(url: baseURL.appendingPathComponent(path))
+        var request = URLRequest(url: baseURL.appending(path: path))
         request.httpMethod = HTTPMethod.get.rawValue
         return request
     }

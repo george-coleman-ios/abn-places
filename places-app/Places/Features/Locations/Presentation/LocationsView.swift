@@ -78,13 +78,18 @@ struct LocationsView: View {
         .task {
             await viewModel.fetchLocations()
         }
-        .alert(item: $viewModel.alert) { alert in
-            return switch alert {
-                case .wikipediaNotInstalled:
-                    Alert(title: Text("Wikipedia app not installed"))
-                case .invalidCoordinates:
-                    Alert(title: Text("Invalid coordinates"),
-                          message: Text("Enter a valid latitude (-90 to 90) and longitude (-180 to 180)."))
+        .alert(
+            viewModel.alert?.title ?? "",
+            isPresented: Binding(
+                get: { viewModel.alert != nil },
+                set: { if !$0 { viewModel.alert = nil } }
+            ),
+            presenting: viewModel.alert
+        ) { _ in
+            Button("OK", role: .cancel) { }
+        } message: { alert in
+            if let message = alert.message {
+                Text(message)
             }
         }
     }

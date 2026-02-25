@@ -23,11 +23,23 @@ final class OpenLocationInWikipediaUseCase: OpenLocationInWikipediaUseCaseProtoc
     }
 
     func execute(location: Location) async throws {
-        var urlString = "wikipedia://places?latitude=\(location.latitude)&longitude=\(location.longitude)"
-        if let name = location.name?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            urlString += "&name=\(name)"
+        var components = URLComponents()
+        components.scheme = "wikipedia"
+        components.host = "places"
+        components.queryItems = [
+            URLQueryItem(name: "latitude", value: String(location.latitude)),
+            URLQueryItem(name: "longitude", value: String(location.longitude))
+        ]
+
+        if let name = location.name {
+            components.queryItems?.append(URLQueryItem(name: "name", value: name))
         }
-        guard let url = URL(string: urlString) else { return }
+
+        guard let url = components.url else {
+            assertionFailure("Failed to construct Wikipedia URL from components: \(components)")
+            return
+        }
+
         let opened = await urlOpener.open(url)
         if !opened {
             throw OpenLocationInWikipediaError.appNotInstalled
