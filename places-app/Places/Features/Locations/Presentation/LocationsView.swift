@@ -10,7 +10,7 @@ import SwiftUI
 struct LocationsView: View {
     @Bindable var viewModel: LocationsViewModel
 
-    private let style = LocationsStyle()
+    @Environment(\.locationsStyle) private var style
 
     var body: some View {
         NavigationStack {
@@ -137,7 +137,7 @@ private struct LocationRow: View {
     let location: Location
     let action: () -> Void
 
-    private let style = LocationsStyle()
+    @Environment(\.locationsStyle) private var style
 
     private var locationAccessibilityLabel: String {
         let coordinates = "Latitude \(location.latitude), Longitude \(location.longitude)"
@@ -185,7 +185,7 @@ private struct LocationRow: View {
 private struct SectionHeader: View {
     let title: String
 
-    private let style = LocationsStyle()
+    @Environment(\.locationsStyle) private var style
 
     var body: some View {
         HStack {
@@ -209,7 +209,7 @@ private struct AddLocationForm: View {
 
     @FocusState private var focusedField: CoordinateField?
 
-    private let style = LocationsStyle()
+    @Environment(\.locationsStyle) private var style
 
     var body: some View {
         VStack(alignment: .leading, spacing: style.formFieldSpacing) {

@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+private struct LocationsStyleKey: EnvironmentKey {
+    static let defaultValue = LocationsStyle()
+}
+
+extension EnvironmentValues {
+    var locationsStyle: LocationsStyle {
+        get { self[LocationsStyleKey.self] }
+        set { self[LocationsStyleKey.self] = newValue }
+    }
+}
+
 struct LocationsStyle {
     // MARK: Floats
 
